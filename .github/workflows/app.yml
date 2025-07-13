@@ -1,0 +1,73 @@
+name: CI
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  lint:
+    name: Lint code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      - name: Install flake8
+        run: pip install flake8
+
+      - name: Run flake8
+        run: flake8 .
+
+  deploy-test:
+    name: Deploy test
+    runs-on: ubuntu-latest
+
+    env:
+      SECRET_KEY: puxyyTg1mAm4ACRVpKULflDGwMK6ZnXt
+      PG_USER: postgres
+      PG_PASSWORD: postgres
+      PG_DBNAME: postgres
+      PG_PORT: 5432
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Docker Compose
+        run: docker compose version
+      
+      - name: Create .env file
+        run: |
+          cat <<EOF > .env
+          SECRET_KEY=puxyyTg1mAm4ACRVpKULflDGwMK6ZnXt
+          PG_HOST: db
+          PG_PORT: 5432
+          PG_USER: postgres
+          PG_PASSWORD: postgres
+          PG_DBNAME: postgres
+          EOF
+
+      - name: Build and run containers
+        run: docker compose -f docker-compose.yml up -d --build
+
+      - name: Wait for services to be ready
+        run: |
+          echo "Waiting for app to be up..."
+          sleep 20
+
+      - name: Check running containers and ports
+        run: |
+          docker ps
+          docker compose ps
+          docker compose logs web || true
+
+      - name: Check main page is working
+        run: |
+          curl -f http://localhost:80 | grep -q "Сириус.Путеводитель"
+
+      - name: Stop containers
+        run: docker compose down

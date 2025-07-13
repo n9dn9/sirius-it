@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Сириус.Путеводитель</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/place.css') }}">
+</head>
+
+<body>
+  <main class="container">
+    <header>Сириус.Путеводитель</header>
+
+    {% if place.photo_url %}
+    <img src="{{ place.photo_url }}" class="image">
+    {% endif %}
+
+    <section class="title-section">
+      <h1 class="title">{{ place.name }}</h1>
+      <div class="rating-box">
+        Средняя оценка
+        <div class="rating-circle">
+          {{ average|round(0, 'common') if average else '—' }}
+        </div>
+      </div>
+    </section>
+
+    <div class="info">
+      Категория: {{ place.category }}<br>
+      Адрес: {{ place.address }}
+    </div>
+
+    <div class="divider"></div>
+
+    <section class="text">{{ place.description }}</section>
+
+    <div class="divider"></div>
+
+    <section>
+      <div class="reviews-title">Отзывы</div>
+
+      <form class="review-form" method="post">
+        <div class="review-form-header">
+          <input type="text" name="author" placeholder="Имя" required>
+          <div class="star-rating">
+            {% for star in range(5, 0, -1) %}
+            <input type="radio" id="star{{ star }}" name="rating" value="{{ star }}" {% if star==5 %}checked{% endif %}>
+            <label for="star{{ star }}">★</label>
+            {% endfor %}
+          </div>
+          <button type="submit" class="submit-btn">Отправить</button>
+        </div>
+        <textarea name="comment" placeholder="Текст комментария" rows="6" required></textarea>
+      </form>
+
+      {% for r in reviews %}
+      <article class="review">
+        <div class="review-left">
+          <div class="reviewer">{{ r.author }}</div>
+          <div class="review-date">{{ r.date.strftime('%d.%m.%Y %H:%M') }}</div>
+          <div class="review-text">{{ r.comment }}</div>
+        </div>
+        <div class="rating-circle">{{ r.rating }}</div>
+      </article>
+      {% endfor %}
+    </section>
+  </main>
+</body>
+
+</html>

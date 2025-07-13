@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Сириус.Путеводитель</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+</head>
+
+<body>
+  <main class="container">
+    <header>Сириус.Путеводитель</header>
+
+    <form method="get">
+      <label>Категория:</label>
+      <select class="category" name="category" onchange="this.form.submit()">
+        <option value="">Все</option>
+        {% for cat in categories %}
+        <option value="{{ cat }}" {% if cat==selected_category %}selected{% endif %}>{{ cat }}</option>
+        {% endfor %}
+      </select>
+    </form>
+
+    <div class="cards">
+      {% for place in places %}
+      <a class="card" href="{{ url_for('place_detail', place_id=place.id) }}">
+        <img src="{{ place.photo_url or url_for('static', filename='img/default.jpg') }}" />
+        <div class="card-content">
+          <div class="card-title">{{ place.name }}</div>
+          <div class="rating">
+            {{ place.average_rating | round(0, 'common') if place.average_rating else '?' }}
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+
+      <a class="add-card" href="{{ url_for('new_place') }}">
+        <span>+</span>
+        Добавить
+      </a>
+    </div>
+  </main>
+</body>
+
+</html>

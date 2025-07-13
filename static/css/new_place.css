@@ -1,0 +1,33 @@
+h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.add-place-form .form-group {
+    margin-bottom: 20px;
+}
+
+.add-place-form label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.add-place-form input[type="file"] {
+    width: 100%;
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
+    resize: none;
+    padding: 5px;
+    background-color: #f9f9f9;
+    border: 1px dashed #ccc;
+}
+
+.message {
+    background-color: #ffdbdb;
+    border: 2px solid #ffc6c6;
+    padding: 15px 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}

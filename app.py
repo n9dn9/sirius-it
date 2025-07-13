@@ -7,20 +7,20 @@ import uuid
 from config import Config
 
 
-def allowed_file(file):
-    if not file:
-        return False
-    mime = magic.from_buffer(file.read(2048), mime=True)
-    file.seek(0)
-    return mime in app.config["ALLOWED_MIME_TYPES"]
-
-
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 
 with app.app_context():
     db.create_all()
+
+
+def allowed_file(file):
+    if not file:
+        return False
+    mime = magic.from_buffer(file.read(2048), mime=True)
+    file.seek(0)
+    return mime in app.config["ALLOWED_MIME_TYPES"]
 
 
 @app.route("/")
@@ -88,6 +88,9 @@ def place_detail(place_id):
         rating = int(request.form["rating"])
         comment = request.form.get("comment")
         author = request.form.get("author")
+
+        if not rating or not comment or not author:
+            return redirect(url_for("place_detail", place_id=place_id))
 
         if rating >= 1 and rating <= 5:
             review = Review(

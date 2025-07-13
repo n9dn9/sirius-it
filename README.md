@@ -5,6 +5,11 @@
 - Docker
 - Poetry
 
+## Использованные библиотеки
+- Flask
+- Flask-SQLAlchemy
+- Python-magic
+
 ## Установка
 1. Склонируйте репозиторий
 ```bash

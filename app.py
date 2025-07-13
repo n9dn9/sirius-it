@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from database import db, Place, Review
-from werkzeug.utils import secure_filename
 import magic
 import os
+import uuid
 
 from config import Config
 
@@ -54,7 +54,8 @@ def new_place():
         photo_url = None
 
         if file and allowed_file(file):
-            filename = secure_filename(file.filename)
+            ext = os.path.splitext(file.filename)[1]
+            filename = f"{uuid.uuid4().hex}{ext}"
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
             photo_url = url_for("static", filename=f"uploads/{filename}")
         else:

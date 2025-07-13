@@ -22,6 +22,7 @@ git clone git@github.com:n9dn9/sirius-it.git
 docker compose up --build
 // при повторном запуске флаг build можно опустить
 ```
+Сайт будет доступен на порту **80**
 
 2. Чтобы выключить проект достаточно прожать Ctrl+C в терминале где был запущен Docker-compose
 
